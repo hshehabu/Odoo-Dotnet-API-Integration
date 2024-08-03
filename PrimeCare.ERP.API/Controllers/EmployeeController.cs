@@ -152,7 +152,11 @@ namespace PrimeCare.ERP.API.Controllers
                     if (employeeData != null && employeeData["active"] != null)
                     {
                         bool isActive = employeeData["active"].Value<bool>();
-                        return new Response() { Success = true, Message = isActive ? "Employee is active." : "Employee is not active." };
+
+                        //check attendance status
+                        var attendanceStatus = await CheckAttendanceStatusAsync(id);
+
+                        return new Response() { Success = true, Message = isActive && attendanceStatus ? "Employee is active and checked in." : "Employee is not active or not checked in." };
                     }
                     else
                     {
@@ -190,8 +194,45 @@ namespace PrimeCare.ERP.API.Controllers
             return response["result"];
         }
 
-       
-      
+
+        private async Task<bool> CheckAttendanceStatusAsync(int employeeId)
+        {
+            var attendanceFields = new[] { "employee_id", "check_in", "check_out" };
+            var attendanceDomain = new[]
+            {
+                new object[] { "employee_id", "=", employeeId },
+                new object[] { "check_in", "!=", false },
+                new object[] { "check_out", "=", false }
+            };
+
+            var attendanceResult = await SearchReadAsync("hr.attendance", attendanceDomain, attendanceFields);
+
+            if (attendanceResult != null && attendanceResult is JArray jArray && jArray.Count > 0)
+            {
+                return true;
+            }
+
+            return false; 
+        }
+
+        private async Task<JToken> SearchReadAsync(string model, object[] domain, string[] fields)
+        {
+            var payload = new
+            {
+                jsonrpc = "2.0",
+                method = "call",
+                @params = new
+                {
+                    model = model,
+                    method = "search_read",
+                    args = new object[] { domain, fields },
+                    kwargs = new { }
+                }
+            };
+
+            var response = await SendRequestAsync("/web/dataset/call_kw", payload);
+            return response["result"];
+        }
 
         private async Task<JToken> SendRequestAsync(string endpoint, object payload)
         {
