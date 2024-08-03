@@ -1,0 +1,153 @@
+# .gitignore for ASP.NET Core
+
+# Ignore Visual Studio temporary files, build results, and
+# Include VSCode temporary files, build results, and
+# Include JetBrains Rider temporary files, build results, and
+# Windows image file caches
+# Reference: https://www.gitignore.io/api/visualstudio,vs code,rider,windows
+
+### Windows ###
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+### VisualStudio ###
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# User-specific files (MonoDevelop/Xamarin Studio)
+*.userprefs
+
+# Mono auto generated files
+mono_crash.*
+
+# VS Code directories
+.vscode/
+.vscode/*
+
+# Rider directories
+.idea/
+.idea/*
+
+# Rider files
+*.iml
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Log files
+*.log
+
+# NPM Packages
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Azure Function Directories
+bin
+obj
+publish/
+
+# Common bin and obj folders
+**/bin
+**/obj
+
+# VS Code directories
+.vscode/
+.vscode/*
+
+# ASP.NET Core directories
+wwwroot/lib
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+# The packages folder can be ignored because of Package Restore
+**/[Pp]ackages
+# except build/, which is used as an MSBuild target.
+!**/[Pp]ackages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/[Pp]ackages/repositories.config
+
+# Microsoft Visual Studio Build Output
+# do not ignore files in the NuGet cache folder, which is on a user profile
+!**/[Uu]ser/[Nn]uGet
+!**/[Uu]ser/[Nn]uGet/packages
+
+# WebAssembly / Blazor / WebAssembly files
+*.out
+*.cache
+out/
+.cache/
+tmp/
+tmp/*
+
+# Entity Framework Migrations
+Migrations/
+
+# Yarn Integrity file
+.yarn-integrity
+
+# .NET Core
+project.lock.json
+project.fragment.lock.json
+project.fragment.lock.json.sha
+project.lock.json.sha
+
+# .NET Framework
+project.lock.json
+project.lock.json.sha
+
+# Exclude all file paths beneath the "dist" directory.
+dist/
+
+# Exclude .NET generated files from dotnet-watch
+.dotnet-watch.json
+.dotnet-watch*
+
+# SonarQube
+.sonarqube/
+
+# StyleCop
+.stylecop/
+
+# OpenCover UI Analysis
+OpenCover
+
+# temp build files
+.temp
+
+# Python build files
+*.pyc
+
+# API keys
+appsettings.json
+
+# Custom: Ignore local settings files
+appsettings.Local.json
+appsettings.Development.json
+
+# Custom: Ignore custom swagger UI files
+wwwroot/swagger-ui/custom-swagger.css
+
+# Ignore Visual Studio temporary files
+.vs/

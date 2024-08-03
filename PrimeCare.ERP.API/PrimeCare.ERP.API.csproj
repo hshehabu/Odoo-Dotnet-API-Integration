@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PrimeCare.ERP.Model\PrimeCare.ERP.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="DSP.Admin.BL">
+      <HintPath>..\dlls\DSP.Admin.BL.dll</HintPath>
+    </Reference>
+    <Reference Include="DSP.Admin.DA">
+      <HintPath>..\dlls\DSP.Admin.DA.dll</HintPath>
+    </Reference>
+    <Reference Include="DSP.HMS.PatCard.BE">
+      <HintPath>..\dlls\DSP.HMS.PatCard.BE.dll</HintPath>
+    </Reference>
+    <Reference Include="DSP.HMS.PatCard.BL">
+      <HintPath>..\dlls\DSP.HMS.PatCard.BL.dll</HintPath>
+    </Reference>
+    <Reference Include="DSP.HMS.PatCard.DA">
+      <HintPath>..\dlls\DSP.HMS.PatCard.DA.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
