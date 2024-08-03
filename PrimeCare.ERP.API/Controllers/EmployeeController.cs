@@ -30,6 +30,32 @@ namespace PrimeCare.ERP.API.Controllers
             _httpClient = new HttpClient();
         }
 
+        private async Task<int?> LoginAsync()
+        {
+            var loginPayload = new
+            {
+                jsonrpc = "2.0",
+                method = "call",
+                @params = new
+                {
+                    db = _odooConfig.DbName,
+                    login = _odooConfig.UserName,
+                    password = _odooConfig.Password
+                }
+            };
+
+            var response = await SendRequestAsync("/web/session/authenticate", loginPayload);
+
+            if (response == null || response["result"] == null || response["result"]["uid"] == null)
+            {
+                Console.WriteLine("Failed to log in. Response: " + response);
+                return null;
+            }
+
+            return response["result"]["uid"].Value<int?>();
+        }
+
+
         [HttpPost]
         [SwaggerOperation(Summary = "Save a new employee", Description = "Saves a new employee to the system.")]
         [SwaggerResponse(200, "Employee saved successfully.", typeof(Response))]
@@ -81,6 +107,25 @@ namespace PrimeCare.ERP.API.Controllers
             {
                 return new Response() { Success = false, Message = $"Error saving employee: {ex.Message}" };
             }
+        }
+
+        private async Task<JToken> CreateAsync(string model, Dictionary<string, object> values)
+        {
+            var createPayload = new
+            {
+                jsonrpc = "2.0",
+                method = "call",
+                @params = new
+                {
+                    model,
+                    method = "create",
+                    args = new[] { values },
+                    kwargs = new { }
+                }
+            };
+
+            var response = await SendRequestAsync("/web/dataset/call_kw", createPayload);
+            return response["result"];
         }
 
         [HttpGet("{id}")]
@@ -145,49 +190,8 @@ namespace PrimeCare.ERP.API.Controllers
             return response["result"];
         }
 
-        private async Task<int?> LoginAsync()
-        {
-            var loginPayload = new
-            {
-                jsonrpc = "2.0",
-                method = "call",
-                @params = new
-                {
-                    db = _odooConfig.DbName,
-                    login = _odooConfig.UserName,
-                    password = _odooConfig.Password
-                }
-            };
-
-            var response = await SendRequestAsync("/web/session/authenticate", loginPayload);
-
-            if (response == null || response["result"] == null || response["result"]["uid"] == null)
-            {
-                Console.WriteLine("Failed to log in. Response: " + response);
-                return null;
-            }
-
-            return response["result"]["uid"].Value<int?>();
-        }
-
-        private async Task<JToken> CreateAsync(string model, Dictionary<string, object> values)
-        {
-            var createPayload = new
-            {
-                jsonrpc = "2.0",
-                method = "call",
-                @params = new
-                {
-                    model,
-                    method = "create",
-                    args = new[] { values },
-                    kwargs = new { }
-                }
-            };
-
-            var response = await SendRequestAsync("/web/dataset/call_kw", createPayload);
-            return response["result"];
-        }
+       
+      
 
         private async Task<JToken> SendRequestAsync(string endpoint, object payload)
         {
