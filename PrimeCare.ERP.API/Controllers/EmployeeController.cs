@@ -3,11 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PrimeCare.ERP.Model;
 using Swashbuckle.AspNetCore.Annotations;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PrimeCare.ERP.API.Controllers
 {
@@ -25,7 +21,7 @@ namespace PrimeCare.ERP.API.Controllers
                 ApiUrl = "http://localhost:8069",
                 DbName = "dsp",
                 UserName = "admin@example.com",
-                Password = "admin1234"
+                Password = "admin"
             };
             _httpClient = new HttpClient();
         }
@@ -143,7 +139,7 @@ namespace PrimeCare.ERP.API.Controllers
                     return new Response() { Success = false, Message = "Login failed." };
                 }
 
-                var readFields = new[] { "active" };
+                var readFields = new[] { "active" ,"name" };
                 var readResult = await ReadAsync("hr.employee", id, readFields);
 
                 if (readResult != null && readResult is JArray jArray && jArray.Count > 0)
@@ -152,11 +148,13 @@ namespace PrimeCare.ERP.API.Controllers
                     if (employeeData != null && employeeData["active"] != null)
                     {
                         bool isActive = employeeData["active"].Value<bool>();
+                        string first_name = employeeData["name"].Value<string>();
 
                         //check attendance status
                         var attendanceStatus = await CheckAttendanceStatusAsync(id);
+                        var checkResignStatus = await CheckResignStatusAsync(id);
 
-                        return new Response() { Success = true, Message = isActive && attendanceStatus ? "Employee is active and checked in." : "Employee is not active or not checked in." };
+                        return new Response() { Success = true, Message = isActive && attendanceStatus && !checkResignStatus ? $"Employee {first_name} is active and checked in." : $"Employee {first_name} is not active or not checked in or resigned." };
                     }
                     else
                     {
@@ -213,6 +211,25 @@ namespace PrimeCare.ERP.API.Controllers
             }
 
             return false; 
+        }
+
+        private async Task<bool> CheckResignStatusAsync(int employeeId)
+        {
+            var resignFields = new[] { "id", "departure_reason_id" };
+            var resignDomain = new[]
+            {
+                new object[] { "id", "=", employeeId },
+                new object[] { "departure_reason_id", "!=", false },
+            };
+
+            var resignResult = await SearchReadAsync("hr.employee", resignDomain, resignFields);
+             
+            if (resignResult != null && resignResult is JArray jArray && jArray.Count > 0)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private async Task<JToken> SearchReadAsync(string model, object[] domain, string[] fields)

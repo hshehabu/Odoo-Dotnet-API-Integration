@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -24,7 +20,7 @@ public class OdooApiClient
             jsonrpc = "2.0",
             method = "call",
             @params = new
-            {
+            { 
                 db = _config.DbName,
                 login = _config.UserName,
                 password = _config.Password

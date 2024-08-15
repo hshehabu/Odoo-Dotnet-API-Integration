@@ -18,7 +18,7 @@ var odooConfig = new OdooConfig
     ApiUrl = "http://localhost:8069",
     DbName = "dsp",
     UserName = "admin@example.com",
-    Password = "admin1234"
+    Password = "admin"
 };
 
 var odooClient = new OdooApiClient(odooConfig);
